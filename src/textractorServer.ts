@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 import nodeConsole from "./nodeConsole";
 import Sentence from "./types/Sentence";
 

@@ -1,12 +1,12 @@
 @font-face {
     font-family: Roboto;
-    src: url(../fonts/Roboto-Regular.ttf);
+    src: url(../../../fonts/Roboto-Regular.ttf);
     font-weight: normal;
 }
 
 @font-face {
     font-family: Roboto;
-    src: url(../fonts/Roboto-Bold.ttf);
+    src: url(../../../fonts/Roboto-Bold.ttf);
     font-weight: bold;
 }
 
@@ -20,7 +20,7 @@ body {
     margin: 0;
     box-sizing: border-box;
 
-    /*position: relative;*/
+    position: relative;
 }
 
 /*.draggable-panel {*/
@@ -81,4 +81,28 @@ body {
 
 .sentence-translated {
     font-weight: bold;
+}
+
+.main-toolbar {
+    display: none; /* todo temporary */
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    box-sizing: border-box;
+}
+
+.main-toolbar-item {
+
+}
+
+.main-toolbar-item > .material-symbols-outlined {
+    color: white;
+    font-size: 14px;
+
+    font-variation-settings:
+            'FILL' 1,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
 }

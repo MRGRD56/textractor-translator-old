@@ -1,14 +1,12 @@
-import {runTextractorServer} from "./textractorServer";
-import GoogleTranslator from "./translation/translators/GoogleTranslator";
-import axios from "axios";
-
-axios.defaults.adapter = 'http';
+import {runTextractorServer} from "../../textractorServer";
+import GoogleTranslator from "../../translation/translators/GoogleTranslator";
+import Transformer from "../../transformation/Transformer";
 
 const translateText = (originalText: string): Promise<string> => {
     return new GoogleTranslator().translate(originalText, 'en', 'ru');
 };
 
-const showSentenceInternal = (textContainer: HTMLElement, textContainerWrapper: HTMLElement, originalText: string, translatedTextPromise: Promise<string>): void => {
+const showSentence = (textContainer: HTMLElement, textContainerWrapper: HTMLElement, originalText: string, translatedTextPromise: Promise<string>): void => {
     const sentenceOriginalElement = document.createElement('div');
     sentenceOriginalElement.classList.add('sentence-original');
     sentenceOriginalElement.textContent = originalText;
@@ -26,7 +24,7 @@ const showSentenceInternal = (textContainer: HTMLElement, textContainerWrapper: 
             sentenceTranslatedElement.textContent = 'Error while translating';
         })
         .finally(() => {
-            textContainerWrapper.scrollTo(0, textContainerWrapper.scrollHeight);
+            textContainerWrapper.scrollTo(0, textContainerWrapper.scrollHeight); // todo check if the scroll is near to the bottom now
         });
 
     const sentenceElement = document.createElement('div');
@@ -39,12 +37,24 @@ const showSentenceInternal = (textContainer: HTMLElement, textContainerWrapper: 
 };
 
 window.addEventListener("DOMContentLoaded", () => {
-    const textContainerWrapper = document.getElementById('text-wrapper');
-    const textContainer = document.getElementById('text');
+    const textContainerWrapper = document.getElementById('text-wrapper')!;
+    const textContainer = document.getElementById('text')!;
 
     runTextractorServer((sentence) => {
-        const {text, meta} = sentence;
+        const {meta} = sentence;
 
-        showSentenceInternal(textContainer, textContainerWrapper, text, translateText(text));
+        const text = new Transformer('test-transformer', `
+/**
+ * @param {{text: string, meta: object}} sentence
+ * @returns {string | undefined}
+ */
+transformer.transform = (sentence) => {
+    return sentence.text.toUpperCase();
+};
+`).transform(sentence);
+
+        if (text !== undefined) {
+            showSentence(textContainer, textContainerWrapper, text, translateText(text));
+        }
     });
 });

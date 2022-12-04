@@ -24,6 +24,9 @@ const showSentenceInternal = (textContainer: HTMLElement, textContainerWrapper: 
         .catch(error => {
             console.error('An error occurred while translating', error)
             sentenceTranslatedElement.textContent = 'Error while translating';
+        })
+        .finally(() => {
+            textContainerWrapper.scrollTo(0, textContainerWrapper.scrollHeight);
         });
 
     const sentenceElement = document.createElement('div');
